@@ -1,7 +1,9 @@
 using Content.Server.NPC.Components;
 using Content.Server.NPC.HTN;
 using Content.Shared.Actions;
+using Content.Shared.Random.Helpers;
 using Robust.Shared.Timing;
+using Robust.Shared.Random;
 
 namespace Content.Server.NPC.Systems;
 
@@ -9,6 +11,7 @@ public sealed class NPCUseActionOnTargetSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -20,15 +23,32 @@ public sealed class NPCUseActionOnTargetSystem : EntitySystem
 
     private void OnMapInit(Entity<NPCUseActionOnTargetComponent> ent, ref MapInitEvent args)
     {
-        ent.Comp.ActionEnt = _actions.AddAction(ent, ent.Comp.ActionId);
+        foreach(var action in ent.Comp.Actions)
+        {
+            var key = action.Key;
+            var value = action.Value;
+
+            var actionEnt = _actions.AddAction(ent, key);
+
+            if (actionEnt is null)
+                continue;
+
+            ent.Comp.ActionsEntities[actionEnt.Value] = value;
+        }
     }
 
-    public bool TryUseTentacleAttack(Entity<NPCUseActionOnTargetComponent?> user, EntityUid target)
+    public bool TryUseAction(Entity<NPCUseActionOnTargetComponent?> user, EntityUid target)
     {
         if (!Resolve(user, ref user.Comp, false))
             return false;
 
-        if (!TryComp<EntityWorldTargetActionComponent>(user.Comp.ActionEnt, out var action))
+        var curTime = _timing.CurTime;
+        if (user.Comp.Cooldown.HasValue && user.Comp.Cooldown.Value.End > curTime)
+            return false;
+
+        var choosenAction = SharedRandomExtensions.Pick(_random, user.Comp.ActionsEntities);
+
+        if (!TryComp<EntityWorldTargetActionComponent>(choosenAction, out var action))
             return false;
 
         if (!_actions.ValidAction(action))
@@ -41,11 +61,13 @@ public sealed class NPCUseActionOnTargetSystem : EntitySystem
 
         _actions.PerformAction(user,
             null,
-            user.Comp.ActionEnt.Value,
+            choosenAction,
             action,
             action.BaseEvent,
             _timing.CurTime,
             false);
+
+        user.Comp.Cooldown = (curTime, curTime + user.Comp.UseDelay);
         return true;
     }
 
@@ -60,7 +82,7 @@ public sealed class NPCUseActionOnTargetSystem : EntitySystem
             if (!htn.Blackboard.TryGetValue<EntityUid>(comp.TargetKey, out var target, EntityManager))
                 continue;
 
-            TryUseTentacleAttack((uid, comp), target);
+            TryUseAction((uid, comp), target);
         }
     }
 }

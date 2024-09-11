@@ -20,8 +20,15 @@ public sealed partial class NPCUseActionOnTargetComponent : Component
     /// Action that's going to attempt to be used.
     /// </summary>
     [DataField(required: true)]
-    public EntProtoId<EntityWorldTargetActionComponent> ActionId;
+    public Dictionary<EntProtoId<EntityWorldTargetActionComponent>, float> Actions = new();
 
     [DataField]
-    public EntityUid? ActionEnt;
+    public Dictionary<EntityUid, float> ActionsEntities = new();
+
+    [DataField]
+    public (TimeSpan Start, TimeSpan End)? Cooldown;
+
+    [DataField]
+    public TimeSpan UseDelay = TimeSpan.FromSeconds(8);
+
 }
