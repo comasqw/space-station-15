@@ -181,7 +181,9 @@
     action: ActionAshDrakeBreath
     gunProto: IAAshDrakeBreathGun
   - type: NPCUseActionOnTarget
-    actionId: ActionAshDrakeArena
+    actions:
+      ActionAshDrakeArena: 0.3
+      ActionAshDrakeBreath: 0.7
 
 
 # Actions
