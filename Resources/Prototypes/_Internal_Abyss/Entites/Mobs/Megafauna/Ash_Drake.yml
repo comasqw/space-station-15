@@ -1,6 +1,6 @@
 ## HTN
 - type: htnCompound
-  id: MeleeAttackTargetCompound
+  id: AshDrakeMeleeAttackTargetCompound
   branches:
     - preconditions:
       - !type:KeyExistsPrecondition
@@ -29,7 +29,7 @@
   branches:
     - tasks:
         - !type:HTNCompoundTask
-          task: MeleeAttackTargetCompound
+          task: AshDrakeMeleeAttackTargetCompound
     - tasks:
         - !type:HTNCompoundTask
           task: IdleCompound
@@ -37,153 +37,153 @@
 
 ## Mob
 
-- type: entity
-  parent: [ SimpleSpaceMobBase, FlyingMobBase ]
-  id: IAMobAshDrake
-  name: space dragon
-  description: A flying leviathan, loosely related to space carps.
-  components:
-  - type: Bloodstream
-    bloodMaxVolume: 650
-  - type: HTN
-    rootTask:
-      task: AshDrakeCompound
-    blackboard:
-      NavInteract: !type:Bool
-        true
-      NavPry: !type:Bool
-        true
-      NavSmash: !type:Bool
-        true
-  - type: NpcFactionMember
-    factions:
-    - Dragon
-  - type: Speech
-    speechVerb: LargeMob
-  - type: CombatMode
-  - type: MobMover
-  - type: InputMover
-  - type: MovementSpeedModifier
-    baseWalkSpeed: 3
-    baseSprintSpeed: 5
-    weightlessModifier: 1.5
-  - type: RandomSprite
-    available:
-    - enum.DamageStateVisualLayers.Base:
-        alive: Rainbow
-  - type: Sprite
-    sprite: Mobs/Aliens/Carps/dragon.rsi
-    noRot: true
-    layers:
-    - map: [ "enum.DamageStateVisualLayers.Base" ]
-      state: alive
-    - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
-      state: alive-unshaded
-      shader: unshaded
-  - type: Appearance
-  - type: DamageStateVisuals
-    states:
-      Alive:
-        Base: alive
-        BaseUnshaded: alive-unshaded
-      Critical:
-        Base: crit
-      Dead:
-        Base: dead
-        BaseUnshaded: dead-unshaded
-  - type: Physics
-    bodyType: KinematicController
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeCircle
-          radius: 0.40
-        density: 100
-        mask:
-        - FlyingMobMask
-        layer:
-        - FlyingMobLayer
-  - type: MobState
-  - type: MobStateActions
-    actions:
-      Critical:
-      - ActionCritSuccumb
-      - ActionCritLastWords
-  - type: MobThresholds
-    thresholds:
-      0: Alive
-      450: Critical
-      500: Dead
-  - type: SlowOnDamage
-    speedModifierThresholds:
-      250: 0.7
-      400: 0.5
-  # disable taking damage from fire, since its a fire breathing dragon
-  - type: Flammable
-    damage:
-      types: {}
-  - type: StatusEffects # Overwriting basesimplemob to remove flash, getting flashed as dragon just feelsbad
-    allowed:
-    - SlowedDown
-    - Stutter
-    - Electrocution
-    - ForcedSleep
-    - TemporaryBlindness
-    - Pacified
-    - RadiationProtection
-    - Drowsiness
-  - type: Temperature
-    heatDamageThreshold: 800
-  - type: Metabolizer
-    solutionOnBody: false
-    updateInterval: 0.25
-    metabolizerTypes: [ Dragon ]
-    groups:
-    - id: Medicine
-    - id: Poison
-  - type: Butcherable
-    spawned:
-    - id: FoodMeatDragon
-      amount: 2
-  - type: InteractionPopup
-    successChance: 0.25 # It's no goose, but you better smell like carp.
-    interactSuccessString: petting-success-dragon
-    interactFailureString: petting-failure-dragon
-    interactFailureSound:
-      path: /Audio/Animals/space_dragon_roar.ogg
-    soundPerceivedByOthers: false # A 75% chance for a loud roar would get old fast.
-  - type: MeleeWeapon
-    altDisarm: false
-    soundHit:
-      path: /Audio/Weapons/Xeno/alien_claw_flesh3.ogg
-    damage:
-      types:
-        Piercing: 15
-        Slash: 15
-  - type: Devourer
-    foodPreference: Humanoid
-    shouldStoreDevoured: true
-    chemical: Ichor
-    healRate: 15.0
-    whitelist:
-      components:
-      - MobState
-      - Door
-      tags:
-      - Wall
-  - type: Tag
-    tags:
-    - CannotSuicide
-    - DoorBumpOpener
-  - type: DrakeArena
-  - type: ActionGun
-    action: ActionAshDrakeBreath
-    gunProto: IAAshDrakeBreathGun
-  - type: NPCUseActionOnTarget
-    actions:
-      ActionAshDrakeArena: 0.3
-      ActionAshDrakeBreath: 0.7
+# - type: entity
+#   parent: [ SimpleSpaceMobBase, FlyingMobBase ]
+#   id: IAMobAshDrake
+#   name: space dragon
+#   description: A flying leviathan, loosely related to space carps.
+#   components:
+#   - type: Bloodstream
+#     bloodMaxVolume: 650
+#   - type: HTN
+#     rootTask:
+#       task: AshDrakeCompound
+#     blackboard:
+#       NavInteract: !type:Bool
+#         true
+#       NavPry: !type:Bool
+#         true
+#       NavSmash: !type:Bool
+#         true
+#   - type: NpcFactionMember
+#     factions:
+#     - Dragon
+#   - type: Speech
+#     speechVerb: LargeMob
+#   - type: CombatMode
+#   - type: MobMover
+#   - type: InputMover
+#   - type: MovementSpeedModifier
+#     baseWalkSpeed: 3
+#     baseSprintSpeed: 5
+#     weightlessModifier: 1.5
+#   - type: RandomSprite
+#     available:
+#     - enum.DamageStateVisualLayers.Base:
+#         alive: Rainbow
+#   - type: Sprite
+#     sprite: Mobs/Aliens/Carps/dragon.rsi
+#     noRot: true
+#     layers:
+#     - map: [ "enum.DamageStateVisualLayers.Base" ]
+#       state: alive
+#     - map: [ "enum.DamageStateVisualLayers.BaseUnshaded" ]
+#       state: alive-unshaded
+#       shader: unshaded
+#   - type: Appearance
+#   - type: DamageStateVisuals
+#     states:
+#       Alive:
+#         Base: alive
+#         BaseUnshaded: alive-unshaded
+#       Critical:
+#         Base: crit
+#       Dead:
+#         Base: dead
+#         BaseUnshaded: dead-unshaded
+#   - type: Physics
+#     bodyType: KinematicController
+#   - type: Fixtures
+#     fixtures:
+#       fix1:
+#         shape:
+#           !type:PhysShapeCircle
+#           radius: 0.40
+#         density: 100
+#         mask:
+#         - FlyingMobMask
+#         layer:
+#         - FlyingMobLayer
+#   - type: MobState
+#   - type: MobStateActions
+#     actions:
+#       Critical:
+#       - ActionCritSuccumb
+#       - ActionCritLastWords
+#   - type: MobThresholds
+#     thresholds:
+#       0: Alive
+#       450: Critical
+#       500: Dead
+#   - type: SlowOnDamage
+#     speedModifierThresholds:
+#       250: 0.7
+#       400: 0.5
+#   # disable taking damage from fire, since its a fire breathing dragon
+#   - type: Flammable
+#     damage:
+#       types: {}
+#   - type: StatusEffects # Overwriting basesimplemob to remove flash, getting flashed as dragon just feelsbad
+#     allowed:
+#     - SlowedDown
+#     - Stutter
+#     - Electrocution
+#     - ForcedSleep
+#     - TemporaryBlindness
+#     - Pacified
+#     - RadiationProtection
+#     - Drowsiness
+#   - type: Temperature
+#     heatDamageThreshold: 800
+#   - type: Metabolizer
+#     solutionOnBody: false
+#     updateInterval: 0.25
+#     metabolizerTypes: [ Dragon ]
+#     groups:
+#     - id: Medicine
+#     - id: Poison
+#   - type: Butcherable
+#     spawned:
+#     - id: FoodMeatDragon
+#       amount: 2
+#   - type: InteractionPopup
+#     successChance: 0.25 # It's no goose, but you better smell like carp.
+#     interactSuccessString: petting-success-dragon
+#     interactFailureString: petting-failure-dragon
+#     interactFailureSound:
+#       path: /Audio/Animals/space_dragon_roar.ogg
+#     soundPerceivedByOthers: false # A 75% chance for a loud roar would get old fast.
+#   - type: MeleeWeapon
+#     altDisarm: false
+#     soundHit:
+#       path: /Audio/Weapons/Xeno/alien_claw_flesh3.ogg
+#     damage:
+#       types:
+#         Piercing: 15
+#         Slash: 15
+#   - type: Devourer
+#     foodPreference: Humanoid
+#     shouldStoreDevoured: true
+#     chemical: Ichor
+#     healRate: 15.0
+#     whitelist:
+#       components:
+#       - MobState
+#       - Door
+#       tags:
+#       - Wall
+#   - type: Tag
+#     tags:
+#     - CannotSuicide
+#     - DoorBumpOpener
+#   - type: DrakeArena
+#   - type: ActionGun
+#     action: ActionAshDrakeBreath
+#     gunProto: IAAshDrakeBreathGun
+#   - type: NPCUseActionOnTarget
+#     actions:
+#       ActionAshDrakeArena: 0.3
+#       ActionAshDrakeBreath: 0.7
 
 
 # Actions
@@ -330,24 +330,9 @@
   id: IAAshDrakeArenaWall
   name: Ash Drake Arena Wall
   components:
-    - type: Sprite
-      sprite: Structures/Walls/plastitanium.rsi
     - type: PointLight
       color: "#E25822"
       radius: 3.0
       energy: 5.0
-    - type: Sprite
-      sprite: Effects/fire.rsi
-      layers:
-      - state: "1"
-        shader: unshaded
-    - type: Fixtures
-      fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeAabb {}
-        mask:
-        - FullTileMask
-        layer:
-        - GlassLayer
-
+    - type: TimedDespawn
+      lifetime: 20

@@ -9,8 +9,8 @@ namespace Content.Shared._Internal_Abyss.Fauna.MegaFauna.Ahs_Drake;
 public sealed class DrakeArenaSystem : EntitySystem
 {
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly IAMapSystem _iaMap = default!;
+    [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
 

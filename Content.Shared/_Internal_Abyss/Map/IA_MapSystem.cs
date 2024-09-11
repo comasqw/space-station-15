@@ -2,7 +2,7 @@ using Robust.Shared.Map;
 
 namespace Content.Shared._Internal_Abyss.Map;
 
-public abstract partial class IAMapSystem
+public class IAMapSystem : EntitySystem
 {
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     public List<MapCoordinates> CreateCoordinatesSqaure(EntityCoordinates user, int size, bool fill = true)
